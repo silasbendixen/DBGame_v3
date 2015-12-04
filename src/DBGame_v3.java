@@ -6,7 +6,9 @@ public class DBGame_v3 {
     GameConnection connection;
 
     public DBGame_v3() {
-        
+        connection = new GameConnection();
+        translator = new GameTranslator(connection);
+        presentation = new GamePresentation(translator);
     }
 
     public static void main(String[] args) {
