@@ -1,5 +1,16 @@
 
 public class DBGame_v3 {
-    //NY TEST
-    //NY TEST2
+
+    GamePresentation presentation;
+    GameTranslator translator;
+    GameConnection connection;
+
+    public DBGame_v3() {
+        
+    }
+
+    public static void main(String[] args) {
+        DBGame_v3 nyt_spil = new DBGame_v3(); //Kører denne klasses constructor
+    }
+
 }
