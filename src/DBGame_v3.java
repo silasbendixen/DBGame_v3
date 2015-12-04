@@ -8,7 +8,8 @@ public class DBGame_v3 {
     public DBGame_v3() {
         connection = new GameConnection();
         translator = new GameTranslator(connection);
-        presentation = new GamePresentation(translator);
+        presentation = new GamePresentation(translator, 600, 400);
+        presentation.startRenderLoop();
     }
 
     public static void main(String[] args) {
