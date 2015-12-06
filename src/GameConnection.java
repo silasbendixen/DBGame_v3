@@ -5,7 +5,7 @@ public class GameConnection {
     //deklaration af variable
     //private String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
 
-    //JDBC-felter
+    //JDBC-felters
     Connection connection;
 
     //Opretter forbindelse til databasen:
