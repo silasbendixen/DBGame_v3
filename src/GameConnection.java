@@ -1,9 +1,10 @@
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 import java.sql.*;
 
 
 public class GameConnection {
     //deklaration af variable
-    //private String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
+    //private };
 
     //JDBC-felters
     Connection connection;
@@ -52,7 +53,7 @@ public class GameConnection {
                     SQL = SQL + playerSQL;
                     break;
                 default:
-                    throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændrér værdien til pieces, moveables eller players");
+                    throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, moveables eller players");
             }
 
             //Der laves et resultset ved navn tableData, hvor den hentede information bliver lagret.
@@ -63,6 +64,52 @@ public class GameConnection {
             System.out.println("moveable sql fejl: " + e);
             return null;
         }
+    }
+
+    //funktion der laver resulset om til hashtable
+    public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
+        //0-6 pieces, 7-9 moveables, resten players
+        String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
+        Hashtable data = new Hashtable();
+        Hashtable dataRow = new Hashtable();
+        int loops;
+
+        switch (table){
+            case "pieces":
+                loops = 6;
+                break;
+            case "moveables":
+                loops = 9;
+                break;
+            case "players":
+                loops = pieceAttributes.length;
+                break;
+            default:
+                throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, players eller moveables");
+        }
+
+        try {
+            while (resultSetData.next()) {
+                int id = resultSetData.getInt("id");
+                dataRow.put("id", id);
+                //for loop, der looper pieceAttributes igennem, således at hashtabellen kommer til at indeholde alle interger values fra resultsettet.
+                for(int i = 0; i<loops; i++) {
+                    dataRow.put(pieceAttributes[i], resultSetData.getInt(pieceAttributes[i]));
+                }
+                    //Hvis det er players, som resultsettet beskriver tilføjes der også et navn til række i hashtabellen.
+                    if(table.equals("players")) {
+                        dataRow.put("name", resultSetData.getString("name"));
+                    }
+
+                    //Sætter datRow (datarækken) ind i hashtabellen data.
+                    data.put(id, dataRow);
+            }
+        }
+        catch (SQLException e){
+            System.out.println("sql fejl: " + e);
+        }
+
+        return data;
     }
 
     //Funktion der muliggør en download af et board ud fra en id
