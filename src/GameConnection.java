@@ -1,12 +1,12 @@
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 import java.sql.*;
 
-
 public class GameConnection {
     //deklaration af variable
     //private };
 
     //JDBC-felters
+    private boolean valid = false;
     Connection connection;
 
     //Opretter forbindelse til databasen:
@@ -33,14 +33,15 @@ public class GameConnection {
 
 
     //funktion der muliggør download og lagring af tabeldata, funktionen kræver en string, der specificerer, hvilken data, der skal hentes
-    public ResultSet getPieceData(String table) {
+    public Hashtable getPieceData(String table) {
         String SQL = "SELECT id, x, y, z, width, height, depth";
         String pieceSQL = " FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
         String moveableSQL = ", speed, acceleration, weight FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
         String playerSQL = ", speed, acceleration, weight, name, roll, pitch, yaw FROM pieces, moveable, players WHERE id NOT IN (SELECT id FROM moveable) AND id NOT IN (SELECT id FROM pieces)";
         ResultSet tableData;
 
-        int columnsNumber;
+        Hashtable tableDataHash = new Hashtable();
+        //resultSetToHashtable();
 
         try {
             Statement statement = connection.createStatement();
@@ -62,7 +63,9 @@ public class GameConnection {
 
             //Der laves et resultset ved navn tableData, hvor den hentede information bliver lagret.
             tableData = statement.executeQuery(SQL);
-            return tableData;
+            resultSetToHashtable(tableData, table);
+
+            return tableDataHash;
         }
         catch (SQLException e) {
             System.out.println("moveable sql fejl: " + e);
@@ -70,7 +73,7 @@ public class GameConnection {
         }
     }
 
-    //funktion der laver et resulset om til et hashtable
+    //funktion der laver et resultset om til et hashtable
     public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
         //0-6 pieces, 7-9 moveables, resten players
         String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
@@ -147,6 +150,8 @@ public class GameConnection {
         return null;
     }
 
+
+    //Funktion jeg har stjålet, der printer et resultset
     public void printResultSet(ResultSet rs){
         try {
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -165,6 +170,7 @@ public class GameConnection {
             System.out.println("moveable sql fejl: " + e);
         }
     }
+
 }
 
 
