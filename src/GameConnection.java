@@ -1,6 +1,6 @@
 import java.util.Hashtable;
 import java.sql.*;
-
+//Det her er den nyeste
 public class GameConnection {
     //deklaration af variable
     //private };
