@@ -73,4 +73,31 @@ public class GameConnection {
             return null;
         }
     }
+    public ResultSet getOnlyPlayers(){
+        try{
+            Statement statement = connection.createStatement();
+            String SQL = "SELECT id, x, y, z, width, height, depth, weight, speed, acceleration, health, yaw, pitch, roll " +
+                    "FROM pieces, moveable, players WHERE id NOT IN (SELECT id FROM moveable) AND id NOT IN (SELECT id FROM pieces)";
+            ResultSet playerData = statement.executeQuery(SQL);
+            return playerData;
+
+    }catch (SQLException e){
+            System.out.println("moveable sql fejl: " + e);
+            return null;
+        }
+    }
+
+    public ResultSet getOnlyMoveables(){
+        try{
+            Statement statement = connection.createStatement();
+            String SQL = "SELECT id, x, y, z, width, height, depth, weight, speed, acceleration, " +
+                    "FROM pieces, moveable, players WHERE id NOT IN (SELECT id FROM pieces)";
+            ResultSet moveableData = statement.executeQuery(SQL);
+            return moveableData;
+
+        }catch (SQLException e){
+            System.out.println("moveable sql fejl: " + e);
+            return null;
+        }
+    }
 }
