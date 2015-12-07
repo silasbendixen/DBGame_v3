@@ -73,7 +73,7 @@ public class GameConnection {
         }
     }
 
-    //funktion der laver et resultset om til et hashtable
+    //funktion der laver et resultset om til et hashtable, kræver tabellen og et resultset
     public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
         //0-6 pieces, 7-9 moveables, resten players
         String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
