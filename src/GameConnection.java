@@ -156,6 +156,31 @@ public class GameConnection {
         return null;
     }
 
+    /*Uses move's method's in Controller to change the values of the variables
+(x,y,z) when there is an action performed (keyPressed)
+*/
+    public void updatePiece(int id, String var, int value){
+        String SQL;
+        //Hashtable updateDataHash;
+        ResultSet updateData;
+        try{
+            Statement statement = connection.createStatement();
+            switch(var){
+                case "x":  SQL = "UPDATE piece SET x=x+" + value + " WHERE id=" + id + ";";
+                    break;
+                case "y":  SQL = "UPDATE piece SET y=y+" + value + " WHERE id=" + id + ";";
+                    break;
+                case "z":  SQL = "UPDATE piece SET z=z+" + value + " WHERE id=" + id + ";";
+                    break;
+            }
+            updateData = statement.executeQuery(SQL);
+            //updateDataHash = resultSetToHashtable(updateData, table); //??
+
+        } catch (SQLException e) {
+            System.out.println("moveable sql fejl: " + e);
+        }
+    }
+
 
     //Funktion jeg har stjålet, der printer et resultset
     public void printResultSet(ResultSet rs){
