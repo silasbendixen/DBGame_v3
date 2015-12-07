@@ -38,6 +38,10 @@ public class GameConnection {
         String pieceSQL = " FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
         String moveableSQL = ", speed, acceleration, weight FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
         String playerSQL = ", speed, acceleration, weight, name, roll, pitch, yaw FROM pieces, moveable, players WHERE id NOT IN (SELECT id FROM moveable) AND id NOT IN (SELECT id FROM pieces)";
+        ResultSet tableData;
+
+        int columnsNumber;
+
         try {
             Statement statement = connection.createStatement();
             //Afhængigt af hvor omfattende datatrækket er, foretages der en gradvis specificering af SQL-statementet.
@@ -57,7 +61,7 @@ public class GameConnection {
             }
 
             //Der laves et resultset ved navn tableData, hvor den hentede information bliver lagret.
-            ResultSet tableData = statement.executeQuery(SQL);
+            tableData = statement.executeQuery(SQL);
             return tableData;
         }
         catch (SQLException e) {
@@ -66,7 +70,7 @@ public class GameConnection {
         }
     }
 
-    //funktion der laver resulset om til hashtable
+    //funktion der laver et resulset om til et hashtable
     public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
         //0-6 pieces, 7-9 moveables, resten players
         String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
@@ -97,12 +101,12 @@ public class GameConnection {
                     dataRow.put(pieceAttributes[i], resultSetData.getInt(pieceAttributes[i]));
                 }
                     //Hvis det er players, som resultsettet beskriver tilføjes der også et navn til række i hashtabellen.
-                    if(table.equals("players")) {
-                        dataRow.put("name", resultSetData.getString("name"));
-                    }
+                if(table.equals("players")) {
+                    dataRow.put("name", resultSetData.getString("name"));
+                }
 
-                    //Sætter datRow (datarækken) ind i hashtabellen data.
-                    data.put(id, dataRow);
+                //Sætter datRow (datarækken) ind i hashtabellen data.
+                data.put(id, dataRow);
             }
         }
         catch (SQLException e){
@@ -139,8 +143,27 @@ public class GameConnection {
             System.out.println("Fejl ved oprettelse af SQL-statement: " + e);
         }
 
-        //Hvis ikke vi retrunerer andet før det her, returnerer vi null
+        //Hvis ikke vi retunerer andet før det her, returnerer vi null
         return null;
+    }
+
+    public void printResultSet(ResultSet rs){
+        try {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            System.out.println("querying SELECT * FROM XXX");
+            int columnsNumber = rsmd.getColumnCount();
+            while (rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
+                }
+                System.out.println("");
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("moveable sql fejl: " + e);
+        }
     }
 }
 
