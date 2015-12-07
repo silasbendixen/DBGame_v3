@@ -5,6 +5,7 @@ import java.sql.*;
 public class GameConnection {
     //deklaration af variable
     //private };
+    // Marc
 
     //JDBC-felters
     Connection connection;
