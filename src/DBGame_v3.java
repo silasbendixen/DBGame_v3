@@ -3,10 +3,12 @@ public class DBGame_v3 {
 
     GamePresentation presentation;
     GameTranslator translator;
-    GameConnection connection;
+    Database connection;
 
     public DBGame_v3() {
-        connection = new GameConnection();
+        //connection = new GameConnection("localhost", "3306", "version2", "root", "");
+        connection = new Database("localhost", "3306", "version2", "root", "");
+
         translator = new GameTranslator(connection);
         presentation = new GamePresentation(translator, 600, 400);
         presentation.startRenderLoop();
