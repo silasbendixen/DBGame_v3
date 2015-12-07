@@ -1,5 +1,6 @@
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
+
 import java.sql.*;
+import java.util.Hashtable;
 
 
 public class GameConnection {
